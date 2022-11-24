@@ -23,7 +23,7 @@ There are 2 example files provided with the tool in the root folder :
 - `definition-example-complex.json`
 
 ### JSON
-```
+```json
 {
   "props":{
     "mapstruct":true,
@@ -50,4 +50,17 @@ _Comming soon..._
 
 ### YAML
 
-_Comming soon_..._
+```yaml
+props:
+  mapstruct: true
+  lombok: true
+  rootPackage: "com.example.demo"
+  package: "domain"
+  spaces: 4
+entities:
+  MyEntity:
+    primaryKey: "id"
+    attributes:
+      id: "long"
+      name: "string"
+```
