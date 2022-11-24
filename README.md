@@ -33,7 +33,7 @@ Just run `php -q seg.php path/to/definition/file`
 | Property      | Mandatory     | Possible values | Description    | 
 | ------------- | ------------- | ------------- | ------------- |
 | primaryKey  | No  | Any `String` | Name of the key that will be used as primary key for entity  |
-| attributes  | Yes  | An `Array` of attribues  | Array used to define all the attributes of an entity   |
+| attributes  | Yes  | An `Array` of attributes  | Array used to define all the attributes of an entity   |
 
 Inside the `attributes` key, you need to set each attributes of the entity.<br />
 Refere to the examples config corresponding to your file format.
