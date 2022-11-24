@@ -12,6 +12,10 @@ Small tool to generate Java Spring entites with default DTO + mapper (vanilla or
 This script takes a definition file as input, and generate files inside the `output` folder.<br />
 Just run `php -q seg.php path/to/definition/file`
 
+## Requirements
+- `PHP 7.2.34`
+- `php-yaml` package
+
 ## Definition file
 
 There are 2 example files provided with the tool in the root folder :
@@ -19,7 +23,7 @@ There are 2 example files provided with the tool in the root folder :
 - `definition-example-complex.json`
 
 ### JSON
-```
+```json
 {
   "props":{
     "mapstruct":true,
@@ -46,4 +50,17 @@ _Comming soon..._
 
 ### YAML
 
-_Comming soon_..._
+```yaml
+props:
+  mapstruct: true
+  lombok: true
+  rootPackage: "com.example.demo"
+  package: "domain"
+  spaces: 4
+entities:
+  MyEntity:
+    primaryKey: "id"
+    attributes:
+      id: "long"
+      name: "string"
+```

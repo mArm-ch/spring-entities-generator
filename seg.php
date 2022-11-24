@@ -6,8 +6,7 @@ $definitionFile = $argv[1];
 if (!file_exists($definitionFile)) {
 	die("Cannot load definition file at path : ".$definitionFile);
 }
-$json = file_get_contents($definitionFile);
-generate($json);
+generate($definitionFile);
 
 /* ----------------------------------------------------------------------------- */
 
@@ -21,11 +20,22 @@ $primitives = array(
 /**
  * Generate all the stuff requested
  */
-function generate($skeleton) {
+function generate($definitionFile) {
 
 	$debug = false;
+	$skeleton = null;
 
-	$skeleton = json_decode($skeleton, false);
+	$definition = file_get_contents($definitionFile);
+	if (substr($definitionFile, -5) == '.json') {
+		$skeleton = json_decode($definition, false);
+	} else if (substr($definitionFile, -5) == '.yaml') {
+		$skeleton = yaml_parse($definition);
+		$skeleton = json_decode(json_encode($skeleton), false);
+	}
+	if ($skeleton === null) {
+		die('Error reading definiton file '.$definitionFile);
+	}
+
 
 	printInfos($skeleton);
 
