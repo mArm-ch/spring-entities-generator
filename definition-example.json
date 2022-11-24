@@ -1,0 +1,18 @@
+{
+  "props":{
+    "mapstruct":true,
+    "lombok":true,
+    "rootPackage":"com.example.demo",
+    "package":"domain",
+    "spaces":4
+  },
+  "entities":{
+    "MyEntity":{
+      "primaryKey":"id",
+      "attributes":{
+        "id":"long",
+        "name":"string"
+      }
+    }
+  }
+}
