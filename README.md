@@ -18,9 +18,15 @@ Just run `php -q seg.php path/to/definition/file`
 
 ### Definition file properties
 
+#### 'props' section
+
 | Property      | Mandatory     | Possible values | Description    | 
 | ------------- | ------------- | ------------- | ------------- |
-| mapstruct  | X  | `true`/`false` | Flag for mapstruct support   |
+| mapstruct  | Yes  | `true`/`false` | Flag for mapstruct support   |
+| lombok  | Yes  | `true`/`false` | Flag for mapstruct support   |
+| rootPackage  | Yes  | Any `String` | Name of the root package that will contains entities package   |
+| package  | Yes  | Any `String` | Name of the package where the entities will be created   |
+| spaces  | Yes  | `Int` | Number of spaces for one indentation  |
 
 
 ### Examples
