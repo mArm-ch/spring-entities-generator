@@ -12,17 +12,28 @@ Just run `php -q seg.php path/to/definition/file`
 
 ## Requirements
 - `PHP 7.2.34`
-- `php-yaml` package
+- Yaml php extension enabled
 
 ## Definition file
 
-There are 4 example files provided with the tool in the `./definition` folder :
+### Definition file properties
+
+| Property      | Mandatory     | Possible values | Description    | 
+| ------------- | ------------- | ------------- | ------------- |
+| mapstruct  | X  | `true`/`false` | Flag for mapstruct support   |
+
+
+### Examples
+
+There are 6 example files provided with the tool in the `./definition` folder :
 - `definition-example.json`
 - `definition-example-complex.json`
 - `definition-example.yaml`
 - `definition-example-complex.yaml`
+- `definition-example.xml`
+- `definition-example-complex.xml`
 
-### JSON
+#### JSON
 ```json
 {
   "props":{
@@ -44,7 +55,7 @@ There are 4 example files provided with the tool in the `./definition` folder :
 }
 ```
 
-### XML
+#### XML
 
 ```xml
 <?xml version='1.0' encoding='UTF-8'?>
@@ -68,7 +79,7 @@ There are 4 example files provided with the tool in the `./definition` folder :
 </definition>
 ```
 
-### YAML
+#### YAML
 
 ```yaml
 props:
