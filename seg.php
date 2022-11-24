@@ -63,13 +63,13 @@ function generate($skeleton) {
 	$pRoot = dirname(__FILE__).'/';
 	$pOut = $pRoot.'output/'.time().'/';
 
-	$rootPackage = $pOut.$props->rootPackage.'/'.strtolower($props->package);
+	$packagePath = $pOut.$props->rootPackage.'/'.strtolower($props->package);
 	mkdir($rootPackage, 0777, true);
 	e("- Output folder will be ".$pOut);
 
 	e("Begin generation...");	
 	foreach ($entities as $entityName => $entityConfig) {
-		$dirPath = $rootPackage.'/'.strtolower($entityName);
+		$dirPath = $packagePath.'/'.strtolower($entityName);
 		mkdir($dirPath, 0777, true);
 		e("Generating '".$entityName."'");
 
@@ -77,9 +77,9 @@ function generate($skeleton) {
 		$fDto = $entityName.'DTO.java';
 		$fMapper = $entityName.'Mapper.java';
 
-		touch($fEntity);
-		touch($fDto);
-		touch($fMapper);
+		touch($dirPath.'/'.$fEntity);
+		touch($dirPath.'/'.$fDto);
+		touch($dirPath.'/'.$fMapper);
 
 		e("- File : ".$fEntity);
 		$c = constructEntity($dirPath.'/'.$fEntity, $entityName, $entityConfig, $props);
