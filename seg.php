@@ -4,10 +4,11 @@
 $skeleton = array(
 	'props' => array(
 		'mapstruct' => false,
-		'lombok' => true,
+		'lombok' => false,
 		'rootPackage' => 'io.ansermot.myassoc',
 		'package' => 'domain',
 		'spaces' => 4,
+		'mapperSingleton' => true,
 	),
 	'entities' => array(
 		'Role' => array(
@@ -50,6 +51,7 @@ function generate($skeleton) {
 		!isset($skeleton->props->lombok) ||
 		!isset($skeleton->props->rootPackage) ||
 		!isset($skeleton->props->package) ||
+		!isset($skeleton->props->mapperSingleton) ||
 		!isset($skeleton->entities)) {
 		die('Missing mandatory fields');
 	}
@@ -83,10 +85,10 @@ function generate($skeleton) {
 		$c = constructEntity($dirPath.'/'.$fEntity, $entityName, $entityConfig, $props);
 		if ($debug) { e($c); e(""); }
 		e("- File : ".$fDto);
-		$c = constructDto($fDto, $entityName, $entityConfig, $props);
+		$c = constructDto($dirPath.'/'.$fDto, $entityName, $entityConfig, $props);
 		if ($debug) { e($c); e(""); }
 		e("- File : ".$fMapper);
-		$c = constructMapper($fMapper, $entityName, $entityConfig, $props);
+		$c = constructMapper($dirPath.'/'.$fMapper, $entityName, $entityConfig, $props);
 		if ($debug) { e($c); e(""); }
 	}
 }
@@ -139,7 +141,11 @@ function constructEntity($file, $name, $config, $properties) {
 	if (!$properties->lombok) {
 		// No Args constructor
 		$c[] = '';
-		$c[] = $SP.'public '.$name.'() { }';
+		$c[] = $SP.'public '.$name.'() {';
+		foreach($config->attributes as $field => $type) {
+			$c[] = $SP.$SP.'this.'.$field.' = null;';
+		}
+		$c[] = $SP.'}';
 		$c[] = '';
 
 		// All Args constructor
@@ -163,6 +169,9 @@ function constructEntity($file, $name, $config, $properties) {
 	return $finalContents;
 }
 
+/**
+ * 
+ */
 function constructDto($file, $name, $config, $properties) {
 	$SP = str_pad(' ', $properties->spaces);
 
@@ -170,6 +179,47 @@ function constructDto($file, $name, $config, $properties) {
 	$c = array();
 	$c[] = 'package '.$properties->rootPackage.'.'.strtolower($properties->package).'.'.strtolower($name).';';
 	$c[] = '';
+
+	// Imports
+	if ($properties->lombok) {
+		$c[] = 'import lombok.Getter;';
+		$c[] = 'import lombok.Setter;';
+		$c[] = '';
+	}
+
+	// Before class annotations
+	if ($properties->lombok) {
+		$c[] = '@Getter';
+		$c[] = '@Setter';
+	}
+
+	// Class declaration
+	$c[] = 'public class '.$name.'DTO {';
+
+	// Class attributes
+	$primaryKey = $config->primaryKey;
+	foreach ($config->attributes as $field => $type) {
+		$c[] = $SP.'private '.ucfirst($type).' '.$field.';';
+	}
+
+	// Getters / setter if no lombok
+	if (!$properties->lombok) {
+		foreach ($config->attributes as $field => $type) {
+			$c[] = '';
+			// Getter
+			$c[] = $SP.'public function get'.ucfirst($field).'() {';
+			$c[] = $SP.$SP.'return this.'.$field.';';
+			$c[] = $SP.'}';
+
+			// Setter
+			$c[] = $SP.'public function set'.ucfirst($field).'('.ucfirst($type).' '.$field.') {';
+			$c[] = $SP.$SP.'this.'.$field.' = '.$field.';';
+			$c[] = $SP.'}';
+		}
+	}
+
+	$c[] = '}';
+
 
 	$finalContents = implode("\n", $c);
 	file_put_contents($file, $finalContents);
@@ -183,6 +233,11 @@ function constructMapper($file, $name, $config, $properties) {
 	$c = array();
 	$c[] = 'package '.$properties->rootPackage.'.'.strtolower($properties->package).'.'.strtolower($name).';';
 	$c[] = '';
+
+	// Class declaration
+	$c[] = 'public class '.$name.'Mapper {';
+
+	$c[] = '}';
 
 	$finalContents = implode("\n", $c);
 	file_put_contents($file, $finalContents);
