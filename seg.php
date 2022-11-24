@@ -29,8 +29,11 @@ function generate($definitionFile) {
 	if (substr($definitionFile, -5) == '.json') {
 		$skeleton = json_decode($definition, false);
 	} else if (substr($definitionFile, -5) == '.yaml') {
-		$skeleton = yaml_parse($definition);
-		$skeleton = json_decode(json_encode($skeleton), false);
+		$yaml = yaml_parse($definition);
+		$skeleton = json_decode(json_encode($yaml), false);
+	} else if (substr($definitionFile, -4) == '.xml') {
+		$xml = simplexml_load_file($definitionFile);
+		$skeleton = json_decode(json_encode($xml), false);
 	}
 	if ($skeleton === null) {
 		die('Error reading definiton file '.$definitionFile);

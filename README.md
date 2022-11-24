@@ -12,17 +12,43 @@ Just run `php -q seg.php path/to/definition/file`
 
 ## Requirements
 - `PHP 7.2.34`
-- `php-yaml` package
+- Yaml php extension enabled
 
 ## Definition file
 
-There are 4 example files provided with the tool in the `./definition` folder :
+### Definition file properties
+
+#### 'props' section
+
+| Property      | Mandatory     | Possible values | Description    | 
+| ------------- | ------------- | ------------- | ------------- |
+| mapstruct  | Yes  | `true`/`false` | Flag for Mapstruct support   |
+| lombok  | Yes  | `true`/`false` | Flag for Lombok support   |
+| rootPackage  | Yes  | Any `String` | Name of the root package that will contains entities package   |
+| package  | Yes  | Any `String` | Name of the package where the entities will be created   |
+| spaces  | Yes  | `Int` | Number of spaces for one indentation  |
+
+#### 'entities'.'entityXX' section
+
+| Property      | Mandatory     | Possible values | Description    | 
+| ------------- | ------------- | ------------- | ------------- |
+| primaryKey  | No  | Any `String` | Name of the key that will be used as primary key for entity  |
+| attributes  | Yes  | An `Array` of attributes  | Array used to define all the attributes of an entity   |
+
+Inside the `attributes` key, you need to set each attributes of the entity.<br />
+Refere to the examples config corresponding to your file format.
+
+### Examples
+
+There are 6 example files provided with the tool in the `./definition` folder :
 - `definition-example.json`
 - `definition-example-complex.json`
 - `definition-example.yaml`
 - `definition-example-complex.yaml`
+- `definition-example.xml`
+- `definition-example-complex.xml`
 
-### JSON
+#### JSON
 ```json
 {
   "props":{
@@ -44,11 +70,31 @@ There are 4 example files provided with the tool in the `./definition` folder :
 }
 ```
 
-### XML
+#### XML
 
-_Comming soon..._
+```xml
+<?xml version='1.0' encoding='UTF-8'?>
+<definition>
+  <props>
+    <mapstruct>true</mapstruct>
+    <lombok>true</lombok>
+    <rootPackage>com.example.demo</rootPackage>
+    <package>domain</package>
+    <spaces>4</spaces>
+  </props>
+  <entities>
+    <MyEntity>
+      <primaryKey>id</primaryKey>
+      <attributes>
+        <id>long</id>
+        <name>string</name>
+      </attributes>
+    </MyEntity>
+  </entities>
+</definition>
+```
 
-### YAML
+#### YAML
 
 ```yaml
 props:
