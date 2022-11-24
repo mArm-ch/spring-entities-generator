@@ -19,7 +19,7 @@ entities:
       canInsert: "boolean"
       canUpdate: "boolean"
       canDelete: "boolean"
-  User
+  User:
     primaryKey: "id"
     attributes:
       id: "long"
