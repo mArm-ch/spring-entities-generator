@@ -1,0 +1,1 @@
+package io.ansermot.myassoc.domain.role;/n/n/n@Entity/n@Data/n@NoArgsConstructor/n@AllArgsContructor/npublic class Role {/n@Id/n@GeneratedValue(strategy = GenerationType.AUTO)/nprivate Long id;/nprivate String name;/n}
