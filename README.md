@@ -46,7 +46,27 @@ There are 4 example files provided with the tool in the `./definition` folder :
 
 ### XML
 
-_Comming soon..._
+```xml
+<?xml version='1.0' encoding='UTF-8'?>
+<definition>
+  <props>
+    <mapstruct>true</mapstruct>
+    <lombok>true</lombok>
+    <rootPackage>com.example.demo</rootPackage>
+    <package>domain</package>
+    <spaces>4</spaces>
+  </props>
+  <entities>
+    <MyEntity>
+      <primaryKey>id</primaryKey>
+      <attributes>
+        <id>long</id>
+        <name>string</name>
+      </attributes>
+    </MyEntity>
+  </entities>
+</definition>
+```
 
 ### YAML
 
