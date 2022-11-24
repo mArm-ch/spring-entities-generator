@@ -1,34 +1,13 @@
 <?php
-
-
-$skeleton = array(
-	'props' => array(
-		'mapstruct' => false,
-		'lombok' => false,
-		'rootPackage' => 'io.ansermot.myassoc',
-		'package' => 'domain',
-		'spaces' => 4,
-		'mapperSingleton' => true,
-	),
-	'entities' => array(
-		'Role' => array(
-			'primaryKey' => 'id',
-			'attributes' => array(
-				'id' => 'long',
-				'name' => 'string',
-			)
-		)
-	)
-);
-
-$json = json_encode($skeleton);
+if ($argc < 2) {
+	die("Missing definition file");
+}
+$definitionFile = $argv[1];
+if (!file_exists($definitionFile)) {
+	die("Cannot load definition file at path : ".$definitionFile);
+}
+$json = file_get_contents($definitionFile);
 generate($json);
-
-
-
-
-
-
 
 /* ----------------------------------------------------------------------------- */
 
@@ -44,9 +23,9 @@ $primitives = array(
  */
 function generate($skeleton) {
 
-	$skeleton = json_decode($skeleton, false);
+	$debug = false;
 
-	$debug = true;
+	$skeleton = json_decode($skeleton, false);
 
 	printInfos($skeleton);
 
@@ -54,7 +33,6 @@ function generate($skeleton) {
 		!isset($skeleton->props->lombok) ||
 		!isset($skeleton->props->rootPackage) ||
 		!isset($skeleton->props->package) ||
-		!isset($skeleton->props->mapperSingleton) ||
 		!isset($skeleton->entities)) {
 		die('Missing mandatory fields');
 	}
@@ -67,7 +45,7 @@ function generate($skeleton) {
 	$pOut = $pRoot.'output/'.time().'/';
 
 	$packagePath = $pOut.$props->rootPackage.'/'.strtolower($props->package);
-	mkdir($rootPackage, 0777, true);
+	mkdir($packagePath, 0777, true);
 	e("- Output folder will be ".$pOut);
 
 	e("Begin generation...");	
