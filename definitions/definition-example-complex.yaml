@@ -1,0 +1,31 @@
+props:
+  mapstruct: false
+  lombok: false
+  rootPackage: "com.example.demo"
+  package: "domain"
+  spaces: 4
+entities:
+  Role:
+    primaryKey: "id"
+    attributes:
+      id: "long"
+      name: "string"
+  Permisson:
+    primaryKey: "id"
+    attributes:
+      id: "long"
+      role: "role"
+      canRead: "boolean"
+      canInsert: "boolean"
+      canUpdate: "boolean"
+      canDelete: "boolean"
+  User
+    primaryKey: "id"
+    attributes:
+      id: "long"
+      username: "string"
+      password: "string"
+      firstname: "string"
+      lastname: "string"
+      email: "string"
+      phone: "string"
