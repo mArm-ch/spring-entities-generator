@@ -1,11 +1,9 @@
-
-
-# Spring entities generator
-Small tool to generate Java Spring entites with default DTO + mapper (vanilla or mapstruct)
-
 <p>
 <img alt="Java : 17" src="https://img.shields.io/badge/Java-17-green.svg" /> <img alt="Spring Boot : 2.7.45" src="https://img.shields.io/badge/Spring%20Boot-2.7.5-green.svg" />
 </p>
+
+# Spring entities generator
+Small tool to generate Java Spring entites with default DTO + mapper (vanilla or mapstruct)
 
 # How to use
 
@@ -18,9 +16,11 @@ Just run `php -q seg.php path/to/definition/file`
 
 ## Definition file
 
-There are 2 example files provided with the tool in the root folder :
+There are 4 example files provided with the tool in the `./definition` folder :
 - `definition-example.json`
 - `definition-example-complex.json`
+- `definition-example.yaml`
+- `definition-example-complex.yaml`
 
 ### JSON
 ```json
