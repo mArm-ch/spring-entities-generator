@@ -11,7 +11,7 @@ if (!file_exists($definitionFile)) {
 	die("Cannot load definition file at path : ".$definitionFile);
 }
 
-$generator = new SpringGenerator($definitionFile);
+$generator = new SpringGenerator($definitionFile, dirname(__FILE__).'/');
 $generator->generate();
 
 ?>
