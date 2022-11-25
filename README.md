@@ -27,6 +27,7 @@ Just run `php -q seg.php path/to/definition/file`
 | rootPackage  | Yes  | Any `String` | Name of the root package that will contains entities package   |
 | package  | Yes  | Any `String` | Name of the package where the entities will be created   |
 | repositories | No | `Repositories` object | The configuration for repositories generation
+| services | No | `Services` object | The configuration for services generation
 | spaces  | Yes  | `Int` | Number of spaces for one indentation  |
 
 #### 'props'.'repositories' section
@@ -37,13 +38,22 @@ Just run `php -q seg.php path/to/definition/file`
 | all  | Yes  | `true`/`false`  | Flag for generation of repositories for all entities   |
 | package  | Yes  | Any `String`  | Name of the package for repositories   |
 
+#### 'props'.'services' section
+
+| Property      | Mandatory     | Possible values | Description    | 
+| ------------- | ------------- | ------------- | ------------- |
+| generate  | Yes  | `true`/`false` | Enable/disable generation (same as not put the section)  |
+| all  | Yes  | `true`/`false`  | Flag for generation of services for all entities   |
+| package  | Yes  | Any `String`  | Name of the package for services   |
+
 #### 'entities'.'entityXX' section
 
 | Property      | Mandatory     | Possible values | Description    | 
 | ------------- | ------------- | ------------- | ------------- |
-| primaryKey  | No  | Any `String` | Name of the key that will be used as primary key for entity  |
-| repository  | No  | `Bool`    | Allow to generate repository for single entity, if `props.repositories.all=false`
-| attributes  | Yes  | An `Array` of attributes  | Array used to define all the attributes of an entity   |
+| primaryKey    | No            | Any `String` | Name of the key that will be used as primary key for entity  |
+| repository    | No            | `Bool`    | Allow to generate repository for single entity, if `props.repositories.all=false`
+| service       | No            | `Bool`    | Allow to generate service for single entity, if `props.services.all=false`
+| attributes    | Yes           | An `Array` of attributes  | Array used to define all the attributes of an entity   |
 
 Inside the `attributes` key, you need to set each attributes of the entity.<br />
 Refere to the examples config corresponding to your file format.
