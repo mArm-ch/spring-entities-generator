@@ -1,7 +1,7 @@
 {
   "props":{
     "mapstruct":false,
-    "lombok":true,
+    "lombok":false,
     "rootPackage":"com.example.demo",
     "package":"domain",
     "repositories":{

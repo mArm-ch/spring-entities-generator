@@ -20,7 +20,7 @@ entities:
     attributes:
       id: "long"
       name: "string"
-  Permisson:
+  Permission:
     repository: true
     service: true
     primaryKey: "id"
