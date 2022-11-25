@@ -3,14 +3,20 @@ props:
   lombok: false
   rootPackage: "com.example.demo"
   package: "domain"
+  repositories:
+    generate: true
+    all: false
+    package: "repositories"
   spaces: 4
 entities:
   Role:
+    repository: true
     primaryKey: "id"
     attributes:
       id: "long"
       name: "string"
   Permisson:
+    repository: true
     primaryKey: "id"
     attributes:
       id: "long"
@@ -20,6 +26,7 @@ entities:
       canUpdate: "boolean"
       canDelete: "boolean"
   User:
+    repository: true
     primaryKey: "id"
     attributes:
       id: "long"

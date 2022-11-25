@@ -3,6 +3,10 @@ props:
   lombok: true
   rootPackage: "com.example.demo"
   package: "domain"
+  repositories:
+    generate: true
+    all: true
+    package: "repositories"
   spaces: 4
 entities:
   MyEntity:

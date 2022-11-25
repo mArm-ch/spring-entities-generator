@@ -5,6 +5,11 @@
     <lombok>true</lombok>
     <rootPackage>com.example.demo</rootPackage>
     <package>domain</package>
+    <repositories>
+      <generate>true</generate>
+      <all>true</all>
+      <package>repositories</package>
+    </repositories>
     <spaces>4</spaces>
   </props>
   <entities>
