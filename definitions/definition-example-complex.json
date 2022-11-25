@@ -4,10 +4,16 @@
     "lombok":true,
     "rootPackage":"com.example.demo",
     "package":"domain",
+    "repositories":{
+      "generate":true,
+      "all":false,
+      "package":"repository"
+    },
     "spaces":4
   },
   "entities":{
     "Role":{
+      "repository":true,
       "primaryKey":"id",
       "attributes":{
         "id":"long",
@@ -15,6 +21,7 @@
       }
     },
     "Permission":{
+      "repository":true,
       "primaryKey":"id",
       "attributes":{
         "id":"long",
@@ -26,6 +33,7 @@
       }
     },
     "User":{
+      "repository":true,
       "primaryKey":"id",
       "attributes":{
         "id":"long",

@@ -2,7 +2,10 @@
 
 final class Constructor {
 
-	protected $path;
+	protected $pathPackage;
+	protected $pathDomain;
+	protected $pathRepository;
+
 	protected $files;
 	protected $name;
 	protected $config;
@@ -13,6 +16,7 @@ final class Constructor {
 	public const FileDto = 'dto';
 	public const FileMapper = 'mapper';
 	public const FileImpl = 'impl';
+	public const FileRepository = 'repository';
 
 	/**
 	 * Constructor
@@ -26,7 +30,12 @@ final class Constructor {
 	 * @access public
 	 */ 
 	public function __construct($path, $files, $name, $config, $properties, $additionalImports) {
-		$this->path = $path;
+		$this->pathPackage = $path;
+		$this->pathDomain = $path.'/'.strtolower($properties->package).'/'.strtolower($name);
+		if (isset($properties->repositories) &&
+			$properties->repositories->generate == true) {
+			$this->pathRepository = $path.'/'.strtolower($properties->repositories->package);
+		}
 		$this->files = $files;
 		$this->name = $name;
 		$this->config = $config;
@@ -40,7 +49,9 @@ final class Constructor {
 	 * @access public
 	 */ 
 	public function createFiles() {
-		$path = rtrim($this->path, '/').'/';
+		$path = rtrim($this->pathDomain, '/').'/';
+		mkdir($path, 0777, true);
+
 		touch($path.$this->files[self::FileEntity]);
 		touch($path.$this->files[self::FileDto]);
 		touch($path.$this->files[self::FileMapper]);
@@ -131,7 +142,7 @@ final class Constructor {
 
 
 		$finalContents = implode("\n", $c);
-		file_put_contents(rtrim($this->path, '/').'/'.$this->files[self::FileEntity], $finalContents);
+		file_put_contents(rtrim($this->pathDomain, '/').'/'.$this->files[self::FileEntity], $finalContents);
 		return $finalContents;
 	}
 
@@ -196,7 +207,7 @@ final class Constructor {
 
 
 		$finalContents = implode("\n", $c);
-		file_put_contents(rtrim($this->path, '/').'/'.$this->files[self::FileDto], $finalContents);
+		file_put_contents(rtrim($this->pathDomain, '/').'/'.$this->files[self::FileDto], $finalContents);
 		return $finalContents;
 	}
 
@@ -231,7 +242,7 @@ final class Constructor {
 		$c[] = '}';
 
 		$finalContents = implode("\n", $c);
-		file_put_contents(rtrim($this->path, '/').'/'.$this->files[self::FileMapper], $finalContents);
+		file_put_contents(rtrim($this->pathDomain, '/').'/'.$this->files[self::FileMapper], $finalContents);
 		return $finalContents;
 	}
 
@@ -293,7 +304,45 @@ final class Constructor {
 		$c[] = '}';
 
 		$finalContents = implode("\n", $c);
-		file_put_contents(rtrim($this->path, '/').'/'.$this->files[self::FileImpl], $finalContents);
+		file_put_contents(rtrim($this->pathDomain, '/').'/'.$this->files[self::FileImpl], $finalContents);
+		return $finalContents;
+	}
+
+	/**
+	 * Construct the repository file for an entity
+	 * 
+	 * @access public
+	 */ 
+	public function createAndConstructRepository() {
+		$SP = str_pad(' ', $this->properties->spaces);
+
+		// Check for repositories directory, create if not exists 
+		if (!is_dir($this->pathRepository)) {
+			mkdir($this->pathRepository, 0777, true);
+		}
+
+		// Creates repository file
+		touch($this->pathRepository.'/'.$this->files[Constructor::FileRepository]);
+
+		// Package
+		$c = array();
+		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->repositories->package).';';
+		$c[] = '';
+
+		// Imports
+		$c[] = 'import org.springframework.data.jpa.repository.JpaRepository;';
+		$c[] = '';
+		$c[] = 'import '.$this->properties->rootPackage.'.'.$this->properties->package.'.'.strtolower($this->name).'.'.ucfirst($this->name).';';
+		$c[] = '';
+
+		// Interface
+		$primaryKeyType = ((array)$this->config->attributes)[$this->config->primaryKey];
+		$c[] = 'public interface '.$this->name.'Repository extends JpaRepository<'.$this->name.', '.ucfirst($primaryKeyType).'> {';
+		$c[] = $SP.$this->name.' findBy'.ucfirst($this->config->primaryKey).'('.ucfirst($primaryKeyType).' '.$this->config->primaryKey.');';
+		$c[] = '}';
+
+		$finalContents = implode("\n", $c);
+		file_put_contents(rtrim($this->pathRepository, '/').'/'.$this->files[self::FileRepository], $finalContents);
 		return $finalContents;
 	}
 }

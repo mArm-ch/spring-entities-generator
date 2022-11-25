@@ -38,11 +38,17 @@ final class SpringGenerator {
 	 * Print some infos in the console
 	 */
 	public function printInfos() {
-		H::e("============================================");
-		H::e("- Use Mapstruct : ".($this->definition->props->mapstruct ? "true" : "false"));
-		H::e("- Use Lombok    : ".($this->definition->props->lombok ? "true" : "false"));
-		H::e("- RootPackage   : ".$this->definition->props->rootPackage);
-		H::e("- Package       : ".$this->definition->props->package);
+		H::e("- Use Mapstruct         : ".($this->definition->props->mapstruct ? "true" : "false"));
+		H::e("- Use Lombok            : ".($this->definition->props->lombok ? "true" : "false"));
+		H::e("- Root package          : ".$this->definition->props->rootPackage);
+		H::e("- Domain package        : ".$this->definition->props->package);
+
+		if (isset($this->definition->props->repositories) && $this->definition->props->repositories->generate) {
+			H::e("- Generate repositories : true");
+			H::e("- Repository package    : ".$this->definition->props->repositories->package);
+		} else {
+			H::e("- Generate repositories : false");
+		}
 		H::e("============================================");
 	}
 
@@ -53,10 +59,10 @@ final class SpringGenerator {
 	 * @access public
 	 */
 	public function generate() {
+
 		H::e("Begin generation...");	
 		foreach ($this->entities as $entityName => $entityConfig) {
-			$dirPath = $this->packagePath.'/'.strtolower($entityName);
-			mkdir($dirPath, 0777, true);
+						
 			H::e("Generating '".$entityName."'");
 
 			$additionalImports = $this->scanForEntitiesUse($this->entitiesClasses, $entityName, $entityConfig, $this->properties);
@@ -66,13 +72,15 @@ final class SpringGenerator {
 				Constructor::FileEntity => $entityName.'.java',
 				Constructor::FileDto => $entityName.'DTO.java',				
 				Constructor::FileMapper => $entityName.'Mapper.java',
-				Constructor::FileImpl => $entityName.'MapperImpl.java'
+				Constructor::FileImpl => $entityName.'MapperImpl.java',
+				Constructor::FileRepository => $entityName.'Repository.java'
 			);
 
-			// Construct contents and save
-			$constructor = new Constructor($dirPath, $files, $entityName, $entityConfig, $this->properties, $additionalImports);
+			// Create files
+			$constructor = new Constructor($this->packagePath, $files, $entityName, $entityConfig, $this->properties, $additionalImports);
 			$constructor->createFiles();
 
+			// Create contents and update files
 			H::e("- File : ".$files[Constructor::FileEntity]);
 			$constructor->constructEntity();
 			H::e("- File : ".$files[Constructor::FileDto]);
@@ -83,7 +91,18 @@ final class SpringGenerator {
 				H::e("- File : ".$files[Constructor::FileImpl]);
 				$constructor->constructMapperImpl();
 			}
+
+			// Repositories generation
+			if (isset($this->properties->repositories) &&
+				$this->properties->repositories->generate == true) {
+				if (($this->properties->repositories->all == false && $entityConfig->repository == true) ||
+					$this->properties->repositories == true) {
+					$constructor->createAndConstructRepository();
+					H::e("- File : ".$files[Constructor::FileRepository]);
+				}
+			}
 		}
+
 
 		H::e("Generation done. Thanks for using this tool.");
 	}
@@ -130,7 +149,7 @@ final class SpringGenerator {
 		// Final package path
 		$pRoot = dirname(__FILE__).'/../';
 		$pOut = $pRoot.'output/'.time().'/';
-		$this->packagePath = $pOut.$this->properties->rootPackage.'/'.strtolower($this->properties->package);
+		$this->packagePath = $pOut.$this->properties->rootPackage;
 		mkdir($this->packagePath, 0777, true);
 		H::e("- Output folder will be ".$pOut);
 
@@ -157,7 +176,6 @@ final class SpringGenerator {
 		}
 		return $imports;
 	}
-
 }
 
 ?>
