@@ -32,9 +32,6 @@ function generate($definitionFile) {
 		die('Error reading definiton file '.$definitionFile);
 	}
 
-
-	printInfos($skeleton);
-
 	if (!isset($skeleton->props->mapstruct) ||
 		!isset($skeleton->props->lombok) ||
 		!isset($skeleton->props->rootPackage) ||
@@ -43,7 +40,7 @@ function generate($definitionFile) {
 		die('Missing mandatory fields');
 	}
 
-	e("Generating entities...");
+	e("Initializion...");
 	$props = $skeleton->props;
 	$entities = $skeleton->entities;
 
@@ -53,7 +50,7 @@ function generate($definitionFile) {
 	mkdir($packagePath, 0777, true);
 	e("- Output folder will be ".$pOut);
 
-	$existingEntities = array_map('strtolower', array_keys($entities));
+	$existingEntities = array_map('strtolower', array_keys((array)$entities));
 	e("- Found entities : ".implode(', ', $existingEntities));
 
 	e("Begin generation...");	
@@ -357,6 +354,13 @@ function scanForEntitiesUse($existingEntities, $name, $config, $properties) {
  * Print some infos in the console
  */
 function printInfos($skeleton) {
+	e("============================================");
+	e("= Spring Boot entities generator")
+	e("= ");
+	e("= Author  : David Ansermot");
+	e("= Version : 1.1.0");
+	e("=");
+	e("= Github  : https://github.com/mArm-ch/spring-entities-generator");
 	e("============================================");
 	e("- Use Mapstruct : ".($skeleton->props->mapstruct ? "true" : "false"));
 	e("- Use Lombok    : ".($skeleton->props->lombok ? "true" : "false"));
