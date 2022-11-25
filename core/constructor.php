@@ -336,9 +336,9 @@ final class Constructor {
 		$c[] = '';
 
 		// Interface
-		$idAttribute = ((array)$this->config->attributes)[$this->config->primaryKey];
-		$c[] = 'public interface '.$this->name.'Repository extends JpaRepository<'.$this->name.', '.ucfirst($idAttribute).'> {';
-		$c[] = '';
+		$primaryKeyType = ((array)$this->config->attributes)[$this->config->primaryKey];
+		$c[] = 'public interface '.$this->name.'Repository extends JpaRepository<'.$this->name.', '.ucfirst($primaryKeyType).'> {';
+		$c[] = $SP.$this->name.' findBy'.ucfirst($this->config->primaryKey).'('.ucfirst($primaryKeyType).' '.$this->config->primaryKey.');';
 		$c[] = '}';
 
 		$finalContents = implode("\n", $c);
