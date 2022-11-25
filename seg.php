@@ -10,13 +10,6 @@ generate($definitionFile);
 
 /* ----------------------------------------------------------------------------- */
 
-$primitives = array(
-	'int',
-	'long',
-	'string',
-	'float',
-);
-
 /**
  * Generate all the stuff requested
  */
@@ -56,16 +49,22 @@ function generate($definitionFile) {
 
 	$pRoot = dirname(__FILE__).'/';
 	$pOut = $pRoot.'output/'.time().'/';
-
 	$packagePath = $pOut.$props->rootPackage.'/'.strtolower($props->package);
 	mkdir($packagePath, 0777, true);
 	e("- Output folder will be ".$pOut);
+
+	$existingEntities = array_map('strtolower', array_keys($entities));
+	e("- Found entities : ".implode(', ', $existingEntities));
 
 	e("Begin generation...");	
 	foreach ($entities as $entityName => $entityConfig) {
 		$dirPath = $packagePath.'/'.strtolower($entityName);
 		mkdir($dirPath, 0777, true);
 		e("Generating '".$entityName."'");
+
+
+		$additionalImports = scanForEntitiesUse($existingEntities, $entityName, $entityConfig, $props);
+
 
 		// Creates files for entity
 		$fEntity = $entityName.'.java';
@@ -82,10 +81,10 @@ function generate($definitionFile) {
 
 		// Construct contents and save
 		e("- File : ".$fEntity);
-		$c = constructEntity($dirPath.'/'.$fEntity, $entityName, $entityConfig, $props);
+		$c = constructEntity($dirPath.'/'.$fEntity, $entityName, $entityConfig, $props, $additionalImports);
 		if ($debug) { e($c); e(""); }
 		e("- File : ".$fDto);
-		$c = constructDto($dirPath.'/'.$fDto, $entityName, $entityConfig, $props);
+		$c = constructDto($dirPath.'/'.$fDto, $entityName, $entityConfig, $props, $additionalImports);
 		if ($debug) { e($c); e(""); }
 		e("- File : ".$fMapper);
 		$c = constructMapper($dirPath.'/'.$fMapper, $entityName, $entityConfig, $props);
@@ -102,7 +101,7 @@ function generate($definitionFile) {
 /**
  * Generate the Entity file contents
  */
-function constructEntity($file, $name, $config, $properties) {
+function constructEntity($file, $name, $config, $properties, $additionalImports) {
 	$SP = str_pad(' ', $properties->spaces);
 
 	// Package
@@ -115,6 +114,12 @@ function constructEntity($file, $name, $config, $properties) {
 		$c[] = 'import lombok.Data;';
 		$c[] = 'import lombok.AllArgsContructor;';
 		$c[] = 'import lombok.NoArgsConstructor;';
+		$c[] = '';
+	}
+	if (count($additionalImports) > 0) {
+		foreach ($additionalImports as $import) {
+			$c[] = $import;
+		}
 		$c[] = '';
 	}
 	$c[] = 'import javax.persistence.Entity;';
@@ -180,7 +185,7 @@ function constructEntity($file, $name, $config, $properties) {
 /**
  * Generate the DTO file contents
  */
-function constructDto($file, $name, $config, $properties) {
+function constructDto($file, $name, $config, $properties, $additionalImports) {
 	$SP = str_pad(' ', $properties->spaces);
 
 	// Package
@@ -192,6 +197,12 @@ function constructDto($file, $name, $config, $properties) {
 	if ($properties->lombok) {
 		$c[] = 'import lombok.Getter;';
 		$c[] = 'import lombok.Setter;';
+		$c[] = '';
+	}
+	if (count($additionalImports) > 0) {
+		foreach ($additionalImports as $import) {
+			$c[] = $import;
+		}
 		$c[] = '';
 	}
 
@@ -327,7 +338,18 @@ function constructMapperImpl($file, $name, $config, $properties) {
 	return $finalContents;
 }
 
-
+/**
+ * Scan the entity config to find use of custom entities
+ */
+function scanForEntitiesUse($existingEntities, $name, $config, $properties) {
+	$imports = array();
+	for($config->attributes as $field => $type) {
+		if (in_array($type, $existingEntities) && $type != strtolower($name)) {
+			$imports[] = 'import '.$properties->rootPackage.'.'.$properties->package.'.'.strtolower($type).';';
+		}
+	}
+	return $imports;
+}
 
 
 
