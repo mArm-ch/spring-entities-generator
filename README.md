@@ -1,5 +1,5 @@
 <p>
-<img alt="Java : 17" src="https://img.shields.io/badge/Java-17-green.svg" /> <img alt="Spring Boot : 2.7.45" src="https://img.shields.io/badge/Spring%20Boot-2.7.5-green.svg" />
+<img alt="Java : 17" src="https://img.shields.io/badge/Java-17-blue.svg" /> <img alt="Spring Boot : 2.7.45" src="https://img.shields.io/badge/Spring%20Boot-2.7.5-blue.svg" /> <img alt="Latest stable : 1.1.0" src="https://img.shields.io/badge/Latest%20stable-1.1.0-green.svg" />
 </p>
 
 # Spring entities generator
@@ -26,7 +26,16 @@ Just run `php -q seg.php path/to/definition/file`
 | lombok  | Yes  | `true`/`false` | Flag for Lombok support   |
 | rootPackage  | Yes  | Any `String` | Name of the root package that will contains entities package   |
 | package  | Yes  | Any `String` | Name of the package where the entities will be created   |
+| repositories | No | `Repositories` object | The configuration for repositories generation
 | spaces  | Yes  | `Int` | Number of spaces for one indentation  |
+
+#### 'props'.'repositories' section
+
+| Property      | Mandatory     | Possible values | Description    | 
+| ------------- | ------------- | ------------- | ------------- |
+| generate  | Yes  | `true`/`false` | Enable/disable generation (same as not put the section)  |
+| all  | Yes  | `true`/`false`  | Flag for generation of repositories for all entities   |
+| package  | Yes  | Any `String`  | Name of the package for repositories   |
 
 #### 'entities'.'entityXX' section
 
@@ -56,6 +65,11 @@ There are 6 example files provided with the tool in the `./definition` folder :
     "lombok":true,
     "rootPackage":"com.example.demo",
     "package":"domain",
+    "repositories":{
+      "generate":true,
+      "all":true,
+      "package":"repository"
+    },
     "spaces":4
   },
   "entities":{
@@ -80,6 +94,11 @@ There are 6 example files provided with the tool in the `./definition` folder :
     <lombok>true</lombok>
     <rootPackage>com.example.demo</rootPackage>
     <package>domain</package>
+    <repositories>
+      <generate>true</generate>
+      <all>true</all>
+      <package>repository</package>
+    </repositories>
     <spaces>4</spaces>
   </props>
   <entities>
@@ -92,6 +111,7 @@ There are 6 example files provided with the tool in the `./definition` folder :
     </MyEntity>
   </entities>
 </definition>
+
 ```
 
 #### YAML
@@ -102,6 +122,10 @@ props:
   lombok: true
   rootPackage: "com.example.demo"
   package: "domain"
+  repositories:
+    generate: true
+    all: true
+    package: "repository"
   spaces: 4
 entities:
   MyEntity:
