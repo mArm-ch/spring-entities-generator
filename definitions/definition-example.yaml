@@ -6,7 +6,7 @@ props:
   repositories:
     generate: true
     all: true
-    package: "repositories"
+    package: "repository"
   spaces: 4
 entities:
   MyEntity:

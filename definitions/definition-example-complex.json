@@ -7,7 +7,7 @@
     "repositories":{
       "generate":true,
       "all":false,
-      "package":"repositories"
+      "package":"repository"
     },
     "spaces":4
   },

@@ -8,7 +8,7 @@
     <repositories>
       <generate>true</generate>
       <all>false</all>
-      <package>repositories</package>
+      <package>repository</package>
     </repositories>
     <spaces>4</spaces>
   </props>
