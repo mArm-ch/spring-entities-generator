@@ -15,8 +15,10 @@ final class Constructor {
 	public const FileEntity = 'entity';
 	public const FileDto = 'dto';
 	public const FileMapper = 'mapper';
-	public const FileImpl = 'impl';
+	public const FileMapperImpl = 'mapperImpl';
 	public const FileRepository = 'repository';
+	public const FileService = 'service';
+	public const FileServiceImpl = 'serviceImpl';
 
 	/**
 	 * Constructor
@@ -56,7 +58,7 @@ final class Constructor {
 		touch($path.$this->files[self::FileDto]);
 		touch($path.$this->files[self::FileMapper]);
 		if (!$this->properties->mapstruct) {
-			touch($path.$this->files[self::FileImpl]);
+			touch($path.$this->files[self::FileMapperImpl]);
 		}
 	}
 
@@ -304,7 +306,7 @@ final class Constructor {
 		$c[] = '}';
 
 		$finalContents = implode("\n", $c);
-		file_put_contents(rtrim($this->pathDomain, '/').'/'.$this->files[self::FileImpl], $finalContents);
+		file_put_contents(rtrim($this->pathDomain, '/').'/'.$this->files[self::FileMapperImpl], $finalContents);
 		return $finalContents;
 	}
 
@@ -344,6 +346,15 @@ final class Constructor {
 		$finalContents = implode("\n", $c);
 		file_put_contents(rtrim($this->pathRepository, '/').'/'.$this->files[self::FileRepository], $finalContents);
 		return $finalContents;
+	}
+
+	/**
+	 * Construct the service files for an entity
+	 * 
+	 * @access public
+	 */ 
+	public function createAndConstructService() {
+
 	}
 }
 

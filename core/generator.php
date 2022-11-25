@@ -72,8 +72,10 @@ final class SpringGenerator {
 				Constructor::FileEntity => $entityName.'.java',
 				Constructor::FileDto => $entityName.'DTO.java',				
 				Constructor::FileMapper => $entityName.'Mapper.java',
-				Constructor::FileImpl => $entityName.'MapperImpl.java',
-				Constructor::FileRepository => $entityName.'Repository.java'
+				Constructor::FileMapperImpl => $entityName.'MapperImpl.java',
+				Constructor::FileRepository => $entityName.'Repository.java',
+				Constructor::FileService => $entityName.'Service.java',
+				Constructor::FileServiceImpl => $entityName.'ServiceImpl.java'
 			);
 
 			// Create files
@@ -81,14 +83,15 @@ final class SpringGenerator {
 			$constructor->createFiles();
 
 			// Create contents and update files
-			H::e("- File : ".$files[Constructor::FileEntity]);
+			H::e("- Package : ".$this->properties->package);
+			H::e("-- File : ".$files[Constructor::FileEntity]);
 			$constructor->constructEntity();
-			H::e("- File : ".$files[Constructor::FileDto]);
+			H::e("-- File : ".$files[Constructor::FileDto]);
 			$constructor->constructDto();
-			H::e("- File : ".$files[Constructor::FileMapper]);
+			H::e("-- File : ".$files[Constructor::FileMapper]);
 			$constructor->constructMapper();
 			if (!$this->properties->mapstruct) {
-				H::e("- File : ".$files[Constructor::FileImpl]);
+				H::e("-- File : ".$files[Constructor::FileMapperImpl]);
 				$constructor->constructMapperImpl();
 			}
 
@@ -96,11 +99,27 @@ final class SpringGenerator {
 			if (isset($this->properties->repositories) &&
 				$this->properties->repositories->generate == true) {
 				if (($this->properties->repositories->all == false && $entityConfig->repository == true) ||
-					$this->properties->repositories == true) {
+					$this->properties->repositories->all == true) {
+					H::e("- Package : ".$this->properties->repositories->package);
+					H::e("-- File : ".$files[Constructor::FileRepository]);
 					$constructor->createAndConstructRepository();
-					H::e("- File : ".$files[Constructor::FileRepository]);
 				}
 			}
+
+			// Services generation
+			if (isset($this->properties->services) &&
+				$this->properties->services->generate == true) {
+				if (($this->properties->services->all == false && $entityConfig->service == true) ||
+					$this->properties->services->all == true) {
+					H::e("- Package : ".$this->properties->services->package);
+					H::e("-- File : ".$files[Constructor::FileService]);
+					$constructor->createAndConstructService();
+					H::e("-- File : ".$files[Constructor::FileServiceImpl]);
+					$constructor->createAndConstructService();
+				}
+			}
+
+			H::e("");
 		}
 
 
