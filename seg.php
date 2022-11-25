@@ -343,7 +343,7 @@ function constructMapperImpl($file, $name, $config, $properties) {
  */
 function scanForEntitiesUse($existingEntities, $name, $config, $properties) {
 	$imports = array();
-	for($config->attributes as $field => $type) {
+	foreach($config->attributes as $field => $type) {
 		if (in_array($type, $existingEntities) && $type != strtolower($name)) {
 			$imports[] = 'import '.$properties->rootPackage.'.'.$properties->package.'.'.strtolower($type).';';
 		}
