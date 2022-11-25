@@ -152,7 +152,7 @@ final class SpringGenerator {
 		$imports = array();
 		foreach($config->attributes as $field => $type) {
 			if (in_array($type, $existingEntities) && $type != strtolower($name)) {
-				$imports[] = 'import '.$properties->rootPackage.'.'.$properties->package.'.'.strtolower($type).';';
+				$imports[] = 'import '.$properties->rootPackage.'.'.$properties->package.'.'.strtolower($type).'.'.ucfirst($type).';';
 			}
 		}
 		return $imports;
