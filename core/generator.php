@@ -2,6 +2,7 @@
 
 final class SpringGenerator {
 	
+	protected $rootFolder;
 	protected $definitionFile;
 	protected $definition;
 	protected $properties;
@@ -15,7 +16,8 @@ final class SpringGenerator {
 	 * @param string $definitionFile: The path to the definition file
 	 * @access publicentitiesClasses
 	 */ 
-	public function __construct($definitionFile) {
+	public function __construct($definitionFile, $rootFolder) {
+		$this->rootFolder = $rootFolder;
 		$this->definitionFile = $definitionFile;
 		$this->printHeader();
 		$this->loadDefinitionFile();
@@ -38,8 +40,8 @@ final class SpringGenerator {
 	 * Print some infos in the console
 	 */
 	public function printInfos() {
-		H::e("- Use Mapstruct         : ".($this->definition->props->mapstruct ? "true" : "false"));
-		H::e("- Use Lombok            : ".($this->definition->props->lombok ? "true" : "false"));
+		H::e("- Use Mapstruct         : ".($this->definition->props->mapstruct == true ? "true" : "false"));
+		H::e("- Use Lombok            : ".($this->definition->props->lombok == true ? "true" : "false"));
 		H::e("- Root package          : ".$this->definition->props->rootPackage);
 		H::e("- Domain package        : ".$this->definition->props->package);
 
@@ -48,6 +50,13 @@ final class SpringGenerator {
 			H::e("- Repository package    : ".$this->definition->props->repositories->package);
 		} else {
 			H::e("- Generate repositories : false");
+		}
+
+		if (isset($this->definition->props->services) && $this->definition->props->services->generate) {
+			H::e("- Generate services     : true");
+			H::e("- Service package       : ".$this->definition->props->services->package);
+		} else {
+			H::e("- Generate sersvice     : false");
 		}
 		H::e("============================================");
 	}
@@ -115,7 +124,7 @@ final class SpringGenerator {
 					H::e("-- File : ".$files[Constructor::FileService]);
 					$constructor->createAndConstructService();
 					H::e("-- File : ".$files[Constructor::FileServiceImpl]);
-					$constructor->createAndConstructService();
+					$constructor->createAndConstructServiceImpl();
 				}
 			}
 
@@ -166,7 +175,7 @@ final class SpringGenerator {
 		$this->entities = $this->definition->entities;
 
 		// Final package path
-		$pRoot = dirname(__FILE__).'/../';
+		$pRoot = $this->rootFolder;
 		$pOut = $pRoot.'output/'.time().'/';
 		$this->packagePath = $pOut.$this->properties->rootPackage;
 		mkdir($this->packagePath, 0777, true);
