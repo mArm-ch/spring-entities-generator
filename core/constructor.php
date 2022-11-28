@@ -86,6 +86,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->package).'.'.strtolower($this->name).';';
 		$c[] = '';
 
@@ -172,6 +174,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->package).'.'.strtolower($this->name).';';
 		$c[] = '';
 
@@ -237,6 +241,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->package).'.'.strtolower($this->name).';';
 		$c[] = '';
 
@@ -249,6 +255,7 @@ final class Constructor {
 		$c[] = '';
 
 		// Class declaration
+		$c[] = Commenter::classBlock('Mapper for the entity '.$this->name);
 		if ($this->properties->mapstruct) {
 			$c[] = '@Mapper';
 		}
@@ -272,6 +279,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->package).'.'.strtolower($this->name).';';
 		$c[] = '';
 
@@ -282,6 +291,7 @@ final class Constructor {
 		$c[] = '';
 
 		// Class declaration
+		$c[] = Commenter::classBlock('Mapper implementation for '.$this->name.'Mapper');
 		$c[] = '@Component';
 		$c[] = 'public class '.$this->name.'MapperImpl implements RoleMapper {';
 		$c[] = '';
@@ -340,6 +350,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->repositories->package).';';
 		$c[] = '';
 
@@ -350,6 +362,9 @@ final class Constructor {
 		$c[] = '';
 
 		// Interface
+		$c[] = Commenter::classBlock('Repository for '.$this->name.' entity',
+									 null,
+									 'JpaRepository');
 		$primaryKeyType = ((array)$this->config->attributes)[$this->config->primaryKey];
 		$c[] = 'public interface '.$this->name.'Repository extends JpaRepository<'.$this->name.', '.ucfirst($primaryKeyType).'> {';
 		$c[] = $SP.$this->name.' findBy'.ucfirst($this->config->primaryKey).'('.ucfirst($primaryKeyType).' '.$this->config->primaryKey.');';
@@ -373,6 +388,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->services->package).';';
 		$c[] = '';
 
@@ -383,6 +400,8 @@ final class Constructor {
 		$c[] = '';
 
 		// Interface
+		// Class
+		$c[] = Commenter::classBlock('Service for '.$this->name.' entity');
 		$c[] = 'public interface '.$this->name.'Service {';
 		$c[] = $SP.'List<'.$this->name.'> get'.$this->name.'s();';
 
@@ -413,6 +432,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->services->package).';';
 		$c[] = '';
 

@@ -14,6 +14,22 @@ final class Commenter {
 	// Utils
 	//
 
+	public static function generatorBlock() {
+		$version = '1.3.0';
+		$comment = array(
+			self::fullLine(),
+			self::emptyLine().'Generated with SpringEntityGenerator (SEG) v'.$version,
+			self::emptyLine(),
+			self::emptyLine().'Github : https://github.com/mArm-ch/openwt-musiclib-training',
+			self::fullLine()
+		);
+		return implode("\n", $comment);
+	}
+
+	public static function printGeneratorBlock() {
+		echo self::generatorBlock();
+	}
+
 	public static function functionBlock($functionDescription, 
 								  		 $parameters,
 								  		 $return,
@@ -97,8 +113,8 @@ final class Commenter {
 		return ' '.C.' ';
 	}
 
-	public static function fullLine() {
-		return ' '.str_pad(C, self::LINE_LENGTH);
+	public static function fullLine($closed = true) {
+		return ' '.str_pad(C, self::LINE_LENGTH).(($closed) ? .C.'/' : '');
 	}
 
 
