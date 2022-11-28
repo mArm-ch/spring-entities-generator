@@ -45,7 +45,38 @@ final class Commenter {
 		echo self::functionBlock($functionDescription,
 								 $parameters,
 								 $return,
-								 $access);
+								 $access,
+								 $linePrefix);
+	}
+
+	public static function classBlock($classDescription,
+									  $implements = null,
+									  $extends = null,
+									  $linePrefix = '') {
+		$comment = array(
+			$linePrefix.self::openTag(),
+			$linePrefix.self::header($classDescription),
+			$linePrefix.self::emptyLine()
+		);
+		if (isset($implements) && $implements != '') {
+			$comment[] = self::emptyLine().'@implements '.$implements;
+		}
+		if (isset($extends) && $extends != '') {
+			$comment[] = self::emptyLine().'@extends '.$extends;
+		}
+		$comment[] = self::closeTag();
+
+		return implode("\n", $comment);
+	}
+
+	public static function printClassBlock($classDescription,
+										   $implements = null,
+										   $extends = null,
+										   $linePrefix = '') {
+		echo self::classBlock($classDescription,
+							  $implements,
+							  $extends,
+							  $linePrefix);
 	}
 
 
