@@ -2,17 +2,20 @@
 
 final class Constructor {
 
+	// Paths
 	protected $pathPackage;
 	protected $pathDomain;
 	protected $pathRepository;
 	protected $pathService;
 
+	// Properties
 	protected $files;
 	protected $name;
 	protected $config;
 	protected $properties;
 	protected $additionalImports;
 
+	// All files buildable
 	public const FileEntity = 'entity';
 	public const FileDto = 'dto';
 	public const FileMapper = 'mapper';
@@ -20,6 +23,8 @@ final class Constructor {
 	public const FileRepository = 'repository';
 	public const FileService = 'service';
 	public const FileServiceImpl = 'serviceImpl';
+
+
 
 	/**
 	 * Constructor
@@ -35,6 +40,7 @@ final class Constructor {
 	public function __construct($path, $files, $name, $config, $properties, $additionalImports) {
 		$this->pathPackage = $path;
 		$this->pathDomain = $path.'/'.strtolower($properties->package).'/'.strtolower($name);
+
 		// Repository
 		if (isset($properties->repositories) &&
 			$properties->repositories->generate == true) {
@@ -382,8 +388,12 @@ final class Constructor {
 
 		$primaryKeyType = ((array)$this->config->attributes)[$this->config->primaryKey];
 		$c[] = $SP.$this->name.' get'.$this->name.'('.ucfirst($primaryKeyType).' '.strtolower($this->config->primaryKey).');';
-		$c[] = '}';
+
+		$c[] = $SP.$this->name.' save'.$this->name.'('.$this->name.' '.strtolower($this->name).');';
+
+		$c[] = $SP.'flush();';
 		
+		$c[] = '}';
 
 		$finalContents = implode("\n", $c);
 		file_put_contents(rtrim($this->pathService, '/').'/'.$this->files[self::FileService], $finalContents);
@@ -424,8 +434,8 @@ final class Constructor {
 			$c[] = '@RequiredArgsConstructor';
 		}
 		$c[] = 'public class '.$this->name.'ServiceImpl implements '.$this->name.'Service {';
-
-		$c[] = $SP.'private final '.$this->name.'Repository '.strtolower($this->name).'Repository;';
+		$repositoryName = strtolower($this->name).'Repository';
+		$c[] = $SP.'private final '.$this->name.'Repository '.$repositoryName.';';
 		$c[] = '';
 
 		// No lombok => we generate injection constructor
@@ -433,7 +443,34 @@ final class Constructor {
 			$c[] = $SP.'public '.$this->name.'ServiceImpl('.$this->name.'Repository '.strtolower($this->name).'Repository) {';
 			$c[] = $SP.$SP.'this.'.strtolower($this->name).'Repository = '.strtolower($this->name).'Repository;';
 			$c[] = $SP.'}';
+			$c[] = '';
 		}
+
+		// Generate methods
+		$primaryKeyType = ((array)$this->config->attributes)[$this->config->primaryKey];
+
+		$c[] = $SP.'@Override';
+		$c[] = $SP.'public List<'.$this->name.'> get'.$this->name.'s() {';
+		$c[] = $SP.$SP.'return '.$repositoryName.'.findAll();';
+		$c[] = $SP.'}';
+		$c[] = '';
+
+		$c[] = $SP.'@Override';
+		$c[] = $SP.'public '.$this->name.' get'.$this->name.'('.ucfirst($primaryKeyType).' '.$this->config->primaryKey.') {';
+		$c[] = $SP.$SP.'return '.$repositoryName.'.findBy'.ucfirst($this->config->primaryKey).'('.$this->config->primaryKey.');';
+		$c[] = $SP.'}';
+		$c[] = '';
+
+		$c[] = $SP.'@Override';
+		$c[] = $SP.'public '.$this->name.' save'.$this->name.'('.$this->name.' '.strtolower($this->name).') {';
+		$c[] = $SP.$SP.'return '.$repositoryName.'.save('.strtolower($this->name).');';
+		$c[] = $SP.'}';
+		$c[] = '';
+
+		$c[] = $SP.'@Override';
+		$c[] = $SP.'public void flush() {';
+		$c[] = $SP.$SP.$repositoryName.'.deleteAll();';
+		$c[] = $SP.'}';
 
 		$c[] = '}';
 		
