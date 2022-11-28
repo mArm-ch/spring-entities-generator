@@ -4,6 +4,16 @@
     "lombok":true,
     "rootPackage":"com.example.demo",
     "package":"domain",
+    "repositories":{
+      "generate":true,
+      "all":true,
+      "package":"repository"
+    },
+    "services":{
+      "generate":true,
+      "all":true,
+      "package":"service"
+    }
     "spaces":4
   },
   "entities":{
