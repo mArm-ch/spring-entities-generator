@@ -449,24 +449,44 @@ final class Constructor {
 		// Generate methods
 		$primaryKeyType = ((array)$this->config->attributes)[$this->config->primaryKey];
 
+		$c[] = Commenter::functionBlock('Returns the list of all '.$this->name.'s',
+										null, 
+										'List of all '.$this->name.'s',
+										Commenter::APUBLIC,
+										$SP);
 		$c[] = $SP.'@Override';
 		$c[] = $SP.'public List<'.$this->name.'> get'.$this->name.'s() {';
 		$c[] = $SP.$SP.'return '.$repositoryName.'.findAll();';
 		$c[] = $SP.'}';
 		$c[] = '';
 
+		$c[] = Commenter::functionBlock('Returns a single '.$this->name.' based on '.$this->config->primaryKey,
+										array($this->config->primaryKey => 'The '.strtolower($this->name).'\'s key'), 
+										'A single '.$this->name.' object or null',
+										Commenter::APUBLIC,
+										$SP);
 		$c[] = $SP.'@Override';
 		$c[] = $SP.'public '.$this->name.' get'.$this->name.'('.ucfirst($primaryKeyType).' '.$this->config->primaryKey.') {';
 		$c[] = $SP.$SP.'return '.$repositoryName.'.findBy'.ucfirst($this->config->primaryKey).'('.$this->config->primaryKey.');';
 		$c[] = $SP.'}';
 		$c[] = '';
 
+		$c[] = Commenter::functionBlock('Save a '.$this->name,
+										array(strtolower($this->name) => 'The '.$this->name.' to save'), 
+										'The saved '.$this->name.' object or null',
+										Commenter::APUBLIC,
+										$SP);
 		$c[] = $SP.'@Override';
 		$c[] = $SP.'public '.$this->name.' save'.$this->name.'('.$this->name.' '.strtolower($this->name).') {';
 		$c[] = $SP.$SP.'return '.$repositoryName.'.save('.strtolower($this->name).');';
 		$c[] = $SP.'}';
 		$c[] = '';
 
+		$c[] = Commenter::functionBlock('Flush the entitie\'s table',
+										null, 
+										null,
+										Commenter::APUBLIC,
+										$SP);
 		$c[] = $SP.'@Override';
 		$c[] = $SP.'public void flush() {';
 		$c[] = $SP.$SP.$repositoryName.'.deleteAll();';
