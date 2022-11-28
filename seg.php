@@ -1,6 +1,7 @@
 <?php
 require_once(dirname(__FILE__).'/core/helper.php');
 require_once(dirname(__FILE__).'/core/generator.php');
+require_once(dirname(__FILE__).'/core/commenter.php');
 require_once(dirname(__FILE__).'/core/constructor.php');
 
 if ($argc < 2) {
