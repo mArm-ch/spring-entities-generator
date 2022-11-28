@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <definition>
   <props>
-    <mapstruct>true</mapstruct>
-    <lombok>true</lombok>
+    <mapstruct>false</mapstruct>
+    <lombok>false</lombok>
     <rootPackage>com.example.demo</rootPackage>
     <package>domain</package>
     <repositories>
@@ -10,11 +10,17 @@
       <all>false</all>
       <package>repository</package>
     </repositories>
+    <services>
+      <generate>true</generate>
+      <all>false</all>
+      <package>service</package>
+    </services>
     <spaces>4</spaces>
   </props>
   <entities>
     <Role>
       <repository>true</repository>
+      <service>true</service>
       <primaryKey>id</primaryKey>
       <attributes>
         <id>long</id>
@@ -23,6 +29,7 @@
     </Role>
     <Permission>
       <repository>true</repository>
+      <service>true</service>
       <primaryKey>id</primaryKey>
       <attributes>
         <id>long</id>
@@ -35,6 +42,7 @@
     </Permission>
     <User>
       <repository>true</repository>
+      <service>true</service>
       <primaryKey>id</primaryKey>
       <attributes>
         <id>long</id>
@@ -44,6 +52,7 @@
         <lastname>string</lastname>
         <email>string</email>
         <phone>string</phone>
+        <role>role</role>
       </attributes>
     </User>
   </entities>

@@ -2,6 +2,7 @@
 
 final class SpringGenerator {
 	
+	protected $rootFolder;
 	protected $definitionFile;
 	protected $definition;
 	protected $properties;
@@ -15,7 +16,8 @@ final class SpringGenerator {
 	 * @param string $definitionFile: The path to the definition file
 	 * @access publicentitiesClasses
 	 */ 
-	public function __construct($definitionFile) {
+	public function __construct($definitionFile, $rootFolder) {
+		$this->rootFolder = $rootFolder;
 		$this->definitionFile = $definitionFile;
 		$this->printHeader();
 		$this->loadDefinitionFile();
@@ -38,8 +40,8 @@ final class SpringGenerator {
 	 * Print some infos in the console
 	 */
 	public function printInfos() {
-		H::e("- Use Mapstruct         : ".($this->definition->props->mapstruct ? "true" : "false"));
-		H::e("- Use Lombok            : ".($this->definition->props->lombok ? "true" : "false"));
+		H::e("- Use Mapstruct         : ".($this->definition->props->mapstruct == true ? "true" : "false"));
+		H::e("- Use Lombok            : ".($this->definition->props->lombok == true ? "true" : "false"));
 		H::e("- Root package          : ".$this->definition->props->rootPackage);
 		H::e("- Domain package        : ".$this->definition->props->package);
 
@@ -48,6 +50,13 @@ final class SpringGenerator {
 			H::e("- Repository package    : ".$this->definition->props->repositories->package);
 		} else {
 			H::e("- Generate repositories : false");
+		}
+
+		if (isset($this->definition->props->services) && $this->definition->props->services->generate) {
+			H::e("- Generate services     : true");
+			H::e("- Service package       : ".$this->definition->props->services->package);
+		} else {
+			H::e("- Generate sersvice     : false");
 		}
 		H::e("============================================");
 	}
@@ -72,8 +81,10 @@ final class SpringGenerator {
 				Constructor::FileEntity => $entityName.'.java',
 				Constructor::FileDto => $entityName.'DTO.java',				
 				Constructor::FileMapper => $entityName.'Mapper.java',
-				Constructor::FileImpl => $entityName.'MapperImpl.java',
-				Constructor::FileRepository => $entityName.'Repository.java'
+				Constructor::FileMapperImpl => $entityName.'MapperImpl.java',
+				Constructor::FileRepository => $entityName.'Repository.java',
+				Constructor::FileService => $entityName.'Service.java',
+				Constructor::FileServiceImpl => $entityName.'ServiceImpl.java'
 			);
 
 			// Create files
@@ -81,14 +92,15 @@ final class SpringGenerator {
 			$constructor->createFiles();
 
 			// Create contents and update files
-			H::e("- File : ".$files[Constructor::FileEntity]);
+			H::e("- Package : ".$this->properties->package);
+			H::e("-- File : ".$files[Constructor::FileEntity]);
 			$constructor->constructEntity();
-			H::e("- File : ".$files[Constructor::FileDto]);
+			H::e("-- File : ".$files[Constructor::FileDto]);
 			$constructor->constructDto();
-			H::e("- File : ".$files[Constructor::FileMapper]);
+			H::e("-- File : ".$files[Constructor::FileMapper]);
 			$constructor->constructMapper();
 			if (!$this->properties->mapstruct) {
-				H::e("- File : ".$files[Constructor::FileImpl]);
+				H::e("-- File : ".$files[Constructor::FileMapperImpl]);
 				$constructor->constructMapperImpl();
 			}
 
@@ -96,11 +108,27 @@ final class SpringGenerator {
 			if (isset($this->properties->repositories) &&
 				$this->properties->repositories->generate == true) {
 				if (($this->properties->repositories->all == false && $entityConfig->repository == true) ||
-					$this->properties->repositories == true) {
+					$this->properties->repositories->all == true) {
+					H::e("- Package : ".$this->properties->repositories->package);
+					H::e("-- File : ".$files[Constructor::FileRepository]);
 					$constructor->createAndConstructRepository();
-					H::e("- File : ".$files[Constructor::FileRepository]);
 				}
 			}
+
+			// Services generation
+			if (isset($this->properties->services) &&
+				$this->properties->services->generate == true) {
+				if (($this->properties->services->all == false && $entityConfig->service == true) ||
+					$this->properties->services->all == true) {
+					H::e("- Package : ".$this->properties->services->package);
+					H::e("-- File : ".$files[Constructor::FileService]);
+					$constructor->createAndConstructService();
+					H::e("-- File : ".$files[Constructor::FileServiceImpl]);
+					$constructor->createAndConstructServiceImpl();
+				}
+			}
+
+			H::e("");
 		}
 
 
@@ -147,7 +175,7 @@ final class SpringGenerator {
 		$this->entities = $this->definition->entities;
 
 		// Final package path
-		$pRoot = dirname(__FILE__).'/../';
+		$pRoot = $this->rootFolder;
 		$pOut = $pRoot.'output/'.time().'/';
 		$this->packagePath = $pOut.$this->properties->rootPackage;
 		mkdir($this->packagePath, 0777, true);

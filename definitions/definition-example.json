@@ -9,6 +9,11 @@
       "all":true,
       "package":"repository"
     },
+    "services":{
+      "generate":true,
+      "all":true,
+      "package":"service"
+    }
     "spaces":4
   },
   "entities":{

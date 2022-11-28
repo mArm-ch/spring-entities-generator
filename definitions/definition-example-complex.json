@@ -1,7 +1,7 @@
 {
   "props":{
     "mapstruct":false,
-    "lombok":true,
+    "lombok":false,
     "rootPackage":"com.example.demo",
     "package":"domain",
     "repositories":{
@@ -9,11 +9,17 @@
       "all":false,
       "package":"repository"
     },
+    "services":{
+      "generate":true,
+      "all":false,
+      "package":"service"
+    },
     "spaces":4
   },
   "entities":{
     "Role":{
       "repository":true,
+      "service":true,
       "primaryKey":"id",
       "attributes":{
         "id":"long",
@@ -22,6 +28,7 @@
     },
     "Permission":{
       "repository":true,
+      "service":true,
       "primaryKey":"id",
       "attributes":{
         "id":"long",
@@ -34,6 +41,7 @@
     },
     "User":{
       "repository":true,
+      "service":true,
       "primaryKey":"id",
       "attributes":{
         "id":"long",
@@ -42,7 +50,8 @@
         "firstname":"string",
         "lastname":"string",
         "email":"string",
-        "phone":"string"
+        "phone":"string",
+        "role":"role"
       }
     }
   }

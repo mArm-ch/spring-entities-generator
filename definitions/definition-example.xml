@@ -10,6 +10,11 @@
       <all>true</all>
       <package>repository</package>
     </repositories>
+    <services>
+      <generate>true</generate>
+      <all>true</all>
+      <package>service</package>
+    </services>
     <spaces>4</spaces>
   </props>
   <entities>
