@@ -428,6 +428,8 @@ final class Constructor {
 		$c[] = '';
 
 		// Class
+		$c[] = Commenter::classBlock('Service implementation for '.$this->name.'Service',
+								     $this->name.'Service');
 		$c[] = '@Service';
 		$c[] = '@Transactional';
 		if ($this->properties->lombok) {
@@ -440,7 +442,12 @@ final class Constructor {
 
 		// No lombok => we generate injection constructor
 		if (!$this->properties->lombok) {
-			$c[] = $SP.'public '.$this->name.'ServiceImpl('.$this->name.'Repository '.strtolower($this->name).'Repository) {';
+			$c[] = Commenter::functionBlock('Constructor',
+										array($repositoryName => 'The '.$this->name.' repository to interact with db'), 
+										'A new '.$this->name.' object',
+										Commenter::APUBLIC,
+										$SP);
+			$c[] = $SP.'public '.$this->name.'ServiceImpl('.$this->name.'Repository '.$repositoryName.') {';
 			$c[] = $SP.$SP.'this.'.strtolower($this->name).'Repository = '.strtolower($this->name).'Repository;';
 			$c[] = $SP.'}';
 			$c[] = '';
