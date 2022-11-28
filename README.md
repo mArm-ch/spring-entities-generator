@@ -1,9 +1,11 @@
 <p>
-<img alt="Java : 17" src="https://img.shields.io/badge/Java-17-blue.svg" /> <img alt="Spring Boot : 2.7.45" src="https://img.shields.io/badge/Spring%20Boot-2.7.5-blue.svg" /> <img alt="Latest stable : 1.1.0" src="https://img.shields.io/badge/Latest%20stable-1.1.0-green.svg" />
+<img alt="Java : 17" src="https://img.shields.io/badge/Java-17-blue.svg" /> <img alt="Spring Boot : 2.7.45" src="https://img.shields.io/badge/Spring%20Boot-2.7.5-blue.svg" /> <img alt="Latest stable : 1.2.0" src="https://img.shields.io/badge/Latest%20stable-1.2.0-green.svg" />
 </p>
 
 # Spring entities generator
-Small tool to generate Java Spring entites with default DTO + mapper (vanilla or mapstruct)
+Small tool to generate Java Spring entities.<br />
+It let you generate domain files by default (entity + DTO + mapper).<br />
+You also can enable repositories and services files generation (for all entities or individualy).
 
 # How to use
 
