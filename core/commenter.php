@@ -8,7 +8,7 @@ final class Commenter {
 	public const APROTECTED = 'protected';
 	public const APRIVATE = 'private';
 
-	protected const LINE_LENGTH = 24;
+	protected const LINE_LENGTH = 48;
 
 	//
 	// Utils
@@ -17,7 +17,7 @@ final class Commenter {
 	public static function generatorBlock() {
 		$version = '1.3.0';
 		$comment = array(
-			self::fullLine(),
+			self::fullLine(false),
 			self::emptyLine().'Generated with SpringEntityGenerator (SEG) v'.$version,
 			self::emptyLine(),
 			self::emptyLine().'Github : https://github.com/mArm-ch/openwt-musiclib-training',
@@ -114,7 +114,7 @@ final class Commenter {
 	}
 
 	public static function fullLine($closed = true) {
-		return ' '.str_pad(C, self::LINE_LENGTH).(($closed) ? .C.'/' : '');
+		return '/'.str_pad(C, self::LINE_LENGTH, C).(($closed) ? C.'/' : '');
 	}
 
 
@@ -147,6 +147,10 @@ final class Commenter {
 	}
 	public static function accessPrivate() {
 		return self::access(self::APRIVATE);
+	}
+
+	public static function simpleComment($message) {
+		return '// '.$message;
 	}
 
 }

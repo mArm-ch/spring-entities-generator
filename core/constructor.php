@@ -1,6 +1,6 @@
 <?php
 
-final class Constructor {
+class Constructor {
 
 	// Paths
 	protected $pathPackage;
@@ -58,7 +58,7 @@ final class Constructor {
 		$this->properties = $properties;
 		$this->additionalImports = $additionalImports;
 	}
-
+	
 	/**
 	 * Creates the files
 	 * 
@@ -458,6 +458,7 @@ final class Constructor {
 		}
 		$c[] = 'public class '.$this->name.'ServiceImpl implements '.$this->name.'Service {';
 		$repositoryName = strtolower($this->name).'Repository';
+		Commenter::simpleComment('Repository to manipulate '.$this->name.' objects');
 		$c[] = $SP.'private final '.$this->name.'Repository '.$repositoryName.';';
 		$c[] = '';
 
