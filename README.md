@@ -1,5 +1,5 @@
 <p>
-<img alt="Java : 17" src="https://img.shields.io/badge/Java-17-blue.svg" /> <img alt="Spring Boot : 2.7.45" src="https://img.shields.io/badge/Spring%20Boot-2.7.5-blue.svg" /> <img alt="Latest stable : 1.2.0" src="https://img.shields.io/badge/Latest%20stable-1.2.0-green.svg" />
+<img alt="Java : 17" src="https://img.shields.io/badge/Java-17-blue.svg" /> <img alt="Spring Boot : 2.7.45" src="https://img.shields.io/badge/Spring%20Boot-2.7.5-blue.svg" /> <img alt="Latest stable : 1.3.0" src="https://img.shields.io/badge/Latest%20stable-1.3.0-green.svg" />
 </p>
 
 # Spring entities generator
