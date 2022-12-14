@@ -13,6 +13,12 @@ if (!file_exists($definitionFile)) {
 }
 
 $generator = new SpringGenerator($definitionFile, dirname(__FILE__).'/');
+H::e("Use this configuration?  Type 'Y/y' to continue: ");
+$handle = fopen ("php://stdin","r");
+$line = fgets($handle);
+if(strtolower(trim($line)) != 'y'){
+    die("Exiting...");
+}
 $generator->generate();
 
 ?>
