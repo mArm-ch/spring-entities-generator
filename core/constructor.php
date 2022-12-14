@@ -1,6 +1,6 @@
 <?php
 
-final class Constructor {
+class Constructor {
 
 	// Paths
 	protected $pathPackage;
@@ -58,7 +58,7 @@ final class Constructor {
 		$this->properties = $properties;
 		$this->additionalImports = $additionalImports;
 	}
-
+	
 	/**
 	 * Creates the files
 	 * 
@@ -86,6 +86,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->package).'.'.strtolower($this->name).';';
 		$c[] = '';
 
@@ -172,6 +174,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->package).'.'.strtolower($this->name).';';
 		$c[] = '';
 
@@ -237,6 +241,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->package).'.'.strtolower($this->name).';';
 		$c[] = '';
 
@@ -249,6 +255,7 @@ final class Constructor {
 		$c[] = '';
 
 		// Class declaration
+		$c[] = Commenter::classBlock('Mapper for the entity '.$this->name);
 		if ($this->properties->mapstruct) {
 			$c[] = '@Mapper';
 		}
@@ -272,6 +279,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->package).'.'.strtolower($this->name).';';
 		$c[] = '';
 
@@ -282,6 +291,7 @@ final class Constructor {
 		$c[] = '';
 
 		// Class declaration
+		$c[] = Commenter::classBlock('Mapper implementation for '.$this->name.'Mapper');
 		$c[] = '@Component';
 		$c[] = 'public class '.$this->name.'MapperImpl implements RoleMapper {';
 		$c[] = '';
@@ -340,6 +350,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->repositories->package).';';
 		$c[] = '';
 
@@ -350,6 +362,9 @@ final class Constructor {
 		$c[] = '';
 
 		// Interface
+		$c[] = Commenter::classBlock('Repository for '.$this->name.' entity',
+									 null,
+									 'JpaRepository');
 		$primaryKeyType = ((array)$this->config->attributes)[$this->config->primaryKey];
 		$c[] = 'public interface '.$this->name.'Repository extends JpaRepository<'.$this->name.', '.ucfirst($primaryKeyType).'> {';
 		$c[] = $SP.$this->name.' findBy'.ucfirst($this->config->primaryKey).'('.ucfirst($primaryKeyType).' '.$this->config->primaryKey.');';
@@ -373,6 +388,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->services->package).';';
 		$c[] = '';
 
@@ -383,6 +400,8 @@ final class Constructor {
 		$c[] = '';
 
 		// Interface
+		// Class
+		$c[] = Commenter::classBlock('Service for '.$this->name.' entity');
 		$c[] = 'public interface '.$this->name.'Service {';
 		$c[] = $SP.'List<'.$this->name.'> get'.$this->name.'s();';
 
@@ -413,6 +432,8 @@ final class Constructor {
 
 		// Package
 		$c = array();
+		$c[] = Commenter::generatorBlock();
+		$c[] = '';
 		$c[] = 'package '.$this->properties->rootPackage.'.'.strtolower($this->properties->services->package).';';
 		$c[] = '';
 
@@ -428,6 +449,8 @@ final class Constructor {
 		$c[] = '';
 
 		// Class
+		$c[] = Commenter::classBlock('Service implementation for '.$this->name.'Service',
+								     $this->name.'Service');
 		$c[] = '@Service';
 		$c[] = '@Transactional';
 		if ($this->properties->lombok) {
@@ -435,12 +458,18 @@ final class Constructor {
 		}
 		$c[] = 'public class '.$this->name.'ServiceImpl implements '.$this->name.'Service {';
 		$repositoryName = strtolower($this->name).'Repository';
+		Commenter::simpleComment('Repository to manipulate '.$this->name.' objects');
 		$c[] = $SP.'private final '.$this->name.'Repository '.$repositoryName.';';
 		$c[] = '';
 
 		// No lombok => we generate injection constructor
 		if (!$this->properties->lombok) {
-			$c[] = $SP.'public '.$this->name.'ServiceImpl('.$this->name.'Repository '.strtolower($this->name).'Repository) {';
+			$c[] = Commenter::functionBlock('Constructor',
+										array($repositoryName => 'The '.$this->name.' repository to interact with db'), 
+										'A new '.$this->name.' object',
+										Commenter::APUBLIC,
+										$SP);
+			$c[] = $SP.'public '.$this->name.'ServiceImpl('.$this->name.'Repository '.$repositoryName.') {';
 			$c[] = $SP.$SP.'this.'.strtolower($this->name).'Repository = '.strtolower($this->name).'Repository;';
 			$c[] = $SP.'}';
 			$c[] = '';
@@ -449,24 +478,44 @@ final class Constructor {
 		// Generate methods
 		$primaryKeyType = ((array)$this->config->attributes)[$this->config->primaryKey];
 
+		$c[] = Commenter::functionBlock('Returns the list of all '.$this->name.'s',
+										null, 
+										'List of all '.$this->name.'s',
+										Commenter::APUBLIC,
+										$SP);
 		$c[] = $SP.'@Override';
 		$c[] = $SP.'public List<'.$this->name.'> get'.$this->name.'s() {';
 		$c[] = $SP.$SP.'return '.$repositoryName.'.findAll();';
 		$c[] = $SP.'}';
 		$c[] = '';
 
+		$c[] = Commenter::functionBlock('Returns a single '.$this->name.' based on '.$this->config->primaryKey,
+										array($this->config->primaryKey => 'The '.strtolower($this->name).'\'s key'), 
+										'A single '.$this->name.' object or null',
+										Commenter::APUBLIC,
+										$SP);
 		$c[] = $SP.'@Override';
 		$c[] = $SP.'public '.$this->name.' get'.$this->name.'('.ucfirst($primaryKeyType).' '.$this->config->primaryKey.') {';
 		$c[] = $SP.$SP.'return '.$repositoryName.'.findBy'.ucfirst($this->config->primaryKey).'('.$this->config->primaryKey.');';
 		$c[] = $SP.'}';
 		$c[] = '';
 
+		$c[] = Commenter::functionBlock('Save a '.$this->name,
+										array(strtolower($this->name) => 'The '.$this->name.' to save'), 
+										'The saved '.$this->name.' object or null',
+										Commenter::APUBLIC,
+										$SP);
 		$c[] = $SP.'@Override';
 		$c[] = $SP.'public '.$this->name.' save'.$this->name.'('.$this->name.' '.strtolower($this->name).') {';
 		$c[] = $SP.$SP.'return '.$repositoryName.'.save('.strtolower($this->name).');';
 		$c[] = $SP.'}';
 		$c[] = '';
 
+		$c[] = Commenter::functionBlock('Flush the entitie\'s table',
+										null, 
+										null,
+										Commenter::APUBLIC,
+										$SP);
 		$c[] = $SP.'@Override';
 		$c[] = $SP.'public void flush() {';
 		$c[] = $SP.$SP.$repositoryName.'.deleteAll();';
